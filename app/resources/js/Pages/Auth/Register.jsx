@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import GoogleButton from 'react-google-button'
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -26,10 +27,19 @@ export default function Register() {
         post(route('register'));
     };
 
+    const redirectToGoogleAuth = () => {
+        // Redirect to the /auth/redirect route
+        window.location.href = '/auth/redirect';
+    };
+
     return (
         <GuestLayout>
             <Head title="Register" />
-
+                <a href={route('google-auth')}>
+                <GoogleButton
+                    type="light"
+                />
+                </a>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
@@ -100,6 +110,7 @@ export default function Register() {
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
+
                     <Link
                         href={route('login')}
                         className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
