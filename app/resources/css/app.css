@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-OR {
+    --tw-text-opacity: 1;
+    color: rgb(71 85 105 / var(--tw-text-opacity));
+    font-size: .875rem;
+    line-height: 1.25rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    gap: 0.5rem;
+    align-items: center;
+    display: flex;
+    width: 100%;
+}
+
+
+.line-full {
+    width: 100%;
+    --tw-bg-opacity: 1;
+    background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+    height: 1px;
+}
+
+.googleAuthBtn {
+    display: flex;
+    justify-content: center;
+}
