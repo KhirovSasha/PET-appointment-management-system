@@ -13,6 +13,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        role: '',
     });
 
     useEffect(() => {
@@ -110,6 +111,17 @@ export default function Register() {
                     />
 
                     <InputError message={errors.password_confirmation} className="mt-2"/>
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="role" value="Choice your role:"/>
+
+                    <select name="role" id="role" onChange={(e) => setData('role', e.target.value)} defaultValue="Client">
+                        <option value="Client">Client</option>
+                        <option value="Company">Company</option>
+                    </select>
+
+                    <InputError message={errors.role} className="mt-2"/>
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
