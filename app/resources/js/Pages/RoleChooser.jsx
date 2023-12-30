@@ -3,7 +3,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 
 const RoleChooser = () => {
     const { data, setData, post, processing} = useForm({
-        role: '',
+        role: 'Client',
     });
 
     const submit = (e) => {

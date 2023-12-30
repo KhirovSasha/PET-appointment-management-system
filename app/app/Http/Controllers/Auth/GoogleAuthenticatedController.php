@@ -17,14 +17,12 @@ class GoogleAuthenticatedController extends Controller
         $user = User::where('email', $googleUser->email)->first();
 
         if (!$user) {
-            $user = User::create([
-                'name' => $googleUser->name,
-                'email' => $googleUser->email,
-                'google_id' => $googleUser->token
-            ]);
+            session()->put('name', $googleUser->name);
+            session()->put('email', $googleUser->email);
+            session()->put('token', $googleUser->token);
 
-            $user->markEmailAsVerified();
-            event(new Verified($user));
+            return redirect()->route('select-role');
+
         } elseif (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
             event(new Verified($user));
@@ -32,6 +30,26 @@ class GoogleAuthenticatedController extends Controller
 
         auth()->login($user);
 
+        return redirect()->route('dashboard');
+    }
+
+    function roleIdentification(Request $request)
+    {
+        $user = User::create([
+            'name' => session()->get('name'),
+            'email' => session()->get('email'),
+            'google_id' => session()->get('token'),
+            'role' => $request->role,
+        ]);
+
+        $user->markEmailAsVerified();
+        event(new Verified($user));
+
+        session()->forget('name');
+        session()->forget('email');
+        session()->forget('token');
+
+        auth()->login($user);
         return redirect()->route('dashboard');
     }
 

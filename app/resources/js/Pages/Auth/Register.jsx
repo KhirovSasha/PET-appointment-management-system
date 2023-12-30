@@ -13,7 +13,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        role: '',
+        role: 'Client',
     });
 
     useEffect(() => {
@@ -116,7 +116,7 @@ export default function Register() {
                 <div className="mt-4">
                     <InputLabel htmlFor="role" value="Choice your role:"/>
 
-                    <select name="role" id="role" onChange={(e) => setData('role', e.target.value)} defaultValue="Client">
+                    <select name="role" id="role" onChange={(e) => setData('role', e.target.value)}>
                         <option value="Client">Client</option>
                         <option value="Company">Company</option>
                     </select>
