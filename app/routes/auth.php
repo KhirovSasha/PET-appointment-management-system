@@ -74,3 +74,9 @@ Route::prefix('auth')->group(function () {
 
     Route::post('roleIdentification', [GoogleAuthenticatedController::class, 'roleIdentification'])->name('roleIdentification')->middleware('role');;
 });
+
+
+Route::get('/redirect', function () {
+    return Socialite::driver('facebook')->redirect();
+})->name('facebook-auth');
+Route::get('/callback', [\App\Http\Controllers\Auth\FacebookAuthenticatedController::class, 'facebookCallback']);
