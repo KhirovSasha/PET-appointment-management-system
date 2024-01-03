@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 
 Route::middleware('guest')->group(function () {
@@ -66,4 +67,16 @@ Route::prefix('auth')->group(function () {
     })->name('google-auth');
 
     Route::get('/google/callback', [GoogleAuthenticatedController::class, 'index']);
+
+    Route::get('/role', function () {
+        return Inertia::render('RoleChooser');
+    })->name('select-role')->middleware('role');
+
+    Route::post('roleIdentification', [GoogleAuthenticatedController::class, 'roleIdentification'])->name('roleIdentification')->middleware('role');;
 });
+
+
+Route::get('/redirect', function () {
+    return Socialite::driver('facebook')->redirect();
+})->name('facebook-auth');
+Route::get('/callback', [\App\Http\Controllers\Auth\FacebookAuthenticatedController::class, 'facebookCallback']);
