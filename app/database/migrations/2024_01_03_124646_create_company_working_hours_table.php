@@ -14,7 +14,13 @@ return new class extends Migration
         Schema::create('company_working_hours', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
-            $table->json('working_days');
+            $table->boolean('monday')->default(false);
+            $table->boolean('tuesday')->default(false);
+            $table->boolean('wednesday')->default(false);
+            $table->boolean('thursday')->default(false);
+            $table->boolean('friday')->default(false);
+            $table->boolean('saturday')->default(false);
+            $table->boolean('sunday')->default(false);
             $table->time('start_time');
             $table->time('end_time');
             $table->timestamps();
