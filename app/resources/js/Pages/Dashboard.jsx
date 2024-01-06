@@ -1,8 +1,15 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
 import {Head, useForm} from '@inertiajs/react';
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 import PrimaryButton from '@/Components/PrimaryButton';
 import React, {useState, useEffect} from 'react';
+import Axios from "axios";
+
+/*const events = [
+    {title: 'Meeting', start: new Date()}
+]*/
+
 export default function Dashboard({auth, daysOfWeek}) {
     const isCompanyUser = auth.user && auth.user.role === 'Company';
 
@@ -16,7 +23,6 @@ export default function Dashboard({auth, daysOfWeek}) {
         'sunday': false
     });
 
-export default function Dashboard({ auth }) {
     const {data, setData, post, processing} = useForm({
         startTime: '',
         endTime: '',
@@ -34,6 +40,22 @@ export default function Dashboard({ auth }) {
         setData('workdays', selectedWorkdays);
     }, [selectedWorkdays]);
 
+    /* useEffect(() => {
+         // Conditionally execute the useEffect only if isCompanyUser is true
+         if (isCompanyUser) {
+             // Make a POST request to fetch data from Laravel controller with user ID
+             Axios.post('/api/companyWorkingHours', {
+                 user_id: auth.user.id, // Include the user ID in the request body
+             })
+                 .then((response) => {
+                     const fetchedData = response.data;
+                     console.log(fetchedData);
+                 })
+                 .catch((error) => {
+                     console.error('Error fetching data:', error);
+                 });
+         }
+     }, [isCompanyUser, auth.user.id]);*/
 
     const handleCheckboxChange = (e) => {
         const day = e.target.value;
@@ -46,6 +68,14 @@ export default function Dashboard({ auth }) {
     };
 
 
+    /*function renderEventContent(eventInfo) {
+        return (
+            <>
+                <b>{eventInfo.timeText}</b>
+                <i>{eventInfo.event.title}</i>
+            </>
+        )
+    }*/
 
 
     return (
@@ -61,7 +91,6 @@ export default function Dashboard({ auth }) {
                         <div className="p-6 text-gray-900">You're logged in!</div>
                     </div>
                 </div>
-            </div>
                 {isCompanyUser && (
                     <div className="test max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <form onSubmit={handleSubmit}>
@@ -99,6 +128,19 @@ export default function Dashboard({ auth }) {
                     </div>
                 )}
             </div>
+
+
+            {/*<div>
+                <h1>Demo App</h1>
+                <FullCalendar
+                    plugins={[dayGridPlugin]}
+                    initialView='dayGridMonth'
+                    weekends={false}
+                    events={events}
+                    eventContent={renderEventContent}
+                />
+            </div>*/}
+
         </AuthenticatedLayout>
     );
 }
