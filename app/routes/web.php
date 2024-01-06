@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Constants;
 use App\Http\Controllers\Company\CompanyWorkingTimeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -28,7 +29,9 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Dashboard', [
+        'daysOfWeek' => Constants::DAYS_OF_WEEK_FIRST_LETTER_UPPER,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/dashboard/client/work-time', [CompanyWorkingTimeController::class, 'store'])->name('work-time')->middleware(['auth', 'verified']);
