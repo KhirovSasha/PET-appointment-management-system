@@ -1,14 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head, useForm, usePage} from '@inertiajs/react';
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
 import PrimaryButton from '@/Components/PrimaryButton';
 import React, {useState, useEffect} from 'react';
 import Axios from "axios";
 
-/*const events = [
-    {title: 'Meeting', start: new Date()}
-]*/
 
 export default function Dashboard({auth, daysOfWeek}) {
     const isCompanyUser = auth.user && auth.user.role === 'Company';
@@ -28,8 +23,6 @@ export default function Dashboard({auth, daysOfWeek}) {
         endTime: ''
     })
 
-    const [dataCompany, setDataCompany] = useState({});
-
     const {data, setData, post, processing} = useForm({
         time: {},
         workdays: {},
@@ -41,7 +34,6 @@ export default function Dashboard({auth, daysOfWeek}) {
         console.log(timeOfWok.startTime);
         post(route('work-time'));
     };
-
 
     useEffect(() => {
         setData('workdays', selectedWorkdays);
@@ -97,17 +89,6 @@ export default function Dashboard({auth, daysOfWeek}) {
             [day.toLowerCase()]: isChecked,
         }));
     };
-
-
-    /*function renderEventContent(eventInfo) {
-        return (
-            <>
-                <b>{eventInfo.timeText}</b>
-                <i>{eventInfo.event.title}</i>
-            </>
-        )
-    }*/
-
 
     return (
         <AuthenticatedLayout
@@ -173,19 +154,6 @@ export default function Dashboard({auth, daysOfWeek}) {
                     </div>
                 )}
             </div>
-
-
-            {/*<div>
-                <h1>Demo App</h1>
-                <FullCalendar
-                    plugins={[dayGridPlugin]}
-                    initialView='dayGridMonth'
-                    weekends={false}
-                    events={events}
-                    eventContent={renderEventContent}
-                />
-            </div>*/}
-
         </AuthenticatedLayout>
     );
 }
