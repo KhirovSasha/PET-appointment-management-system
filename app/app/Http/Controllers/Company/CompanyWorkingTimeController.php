@@ -11,7 +11,6 @@ class CompanyWorkingTimeController extends Controller
 {
     function store(Request $request)
     {
-
         $data = $request->all();
 
         $daysOfWeek = Constants::DAYS_OF_WEEK;
@@ -20,8 +19,8 @@ class CompanyWorkingTimeController extends Controller
         $workingDays = array_map('boolval', $workingDays);
 
         $tableData = [
-                'start_time' => $data['startTime'],
-                'end_time' => $data['endTime'],
+                'start_time' => $data['time']['startTime'],
+                'end_time' => $data['time']['endTime'],
             ] + $workingDays;
 
         $companyWorkingHours = CompanyWorkingHours::firstOrNew(['company_id' => $data['company_id']]);
