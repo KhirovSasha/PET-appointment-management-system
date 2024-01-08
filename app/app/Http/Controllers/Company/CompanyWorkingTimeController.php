@@ -26,7 +26,5 @@ class CompanyWorkingTimeController extends Controller
         $companyWorkingHours = CompanyWorkingHours::firstOrNew(['company_id' => $data['company_id']]);
         $companyWorkingHours->fill($tableData);
         $companyWorkingHours->save();
-
-        return response()->json(['message' => 'Дані успішно отримані та оброблені']);
     }
 }
