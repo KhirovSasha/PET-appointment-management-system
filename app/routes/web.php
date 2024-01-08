@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Constants;
+use App\Http\Controllers\Auth\DasboardController;
 use App\Http\Controllers\Company\CompanyWorkingTimeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -34,15 +35,16 @@ Route::get('/dashboard', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('/dashboard/client/work-time', [CompanyWorkingTimeController::class, 'store'])->name('work-time')->middleware(['auth', 'verified']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/companyWorkingHours', [DasboardController::class, 'companyTime'])->name('companyTime');
+
+    Route::post('/dashboard/client/work-time', [CompanyWorkingTimeController::class, 'store'])->name('work-time')->middleware('verified');
 });
-
-
-
 
 require __DIR__.'/auth.php';
