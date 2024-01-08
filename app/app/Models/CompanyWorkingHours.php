@@ -27,4 +27,9 @@ class CompanyWorkingHours extends Model
         'end_time' => 'datetime',
         'working_days' => 'json',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'company_id', 'id');
+    }
 }
