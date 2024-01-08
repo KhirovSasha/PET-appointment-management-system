@@ -35,7 +35,9 @@ Route::get('/dashboard', function () {
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
+Route::get('/calendar', function () {
+    return Inertia::render('Calendar');
+})->middleware(['auth', 'verified'])->name('calendar');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
