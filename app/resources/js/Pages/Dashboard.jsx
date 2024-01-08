@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {Head, useForm} from '@inertiajs/react';
+import {Head, useForm, usePage} from '@inertiajs/react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -21,41 +21,72 @@ export default function Dashboard({auth, daysOfWeek}) {
         'friday': false,
         'saturday': false,
         'sunday': false
-    });
+    })
+
+    const [timeOfWok, setTimeOfWork] = useState({
+        startTime: '',
+        endTime: ''
+    })
+
+    const [dataCompany, setDataCompany] = useState({});
 
     const {data, setData, post, processing} = useForm({
-        startTime: '',
-        endTime: '',
+        time: {},
         workdays: {},
         company_id: auth.user.id
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(timeOfWok.startTime);
         post(route('work-time'));
     };
 
 
     useEffect(() => {
         setData('workdays', selectedWorkdays);
+
     }, [selectedWorkdays]);
 
-    /* useEffect(() => {
-         // Conditionally execute the useEffect only if isCompanyUser is true
-         if (isCompanyUser) {
-             // Make a POST request to fetch data from Laravel controller with user ID
-             Axios.post('/api/companyWorkingHours', {
-                 user_id: auth.user.id, // Include the user ID in the request body
-             })
-                 .then((response) => {
-                     const fetchedData = response.data;
-                     console.log(fetchedData);
-                 })
-                 .catch((error) => {
-                     console.error('Error fetching data:', error);
-                 });
-         }
-     }, [isCompanyUser, auth.user.id]);*/
+    useEffect(() => {
+        setData('time', timeOfWok);
+
+    }, [timeOfWok.startTime, timeOfWok.endTime]);
+
+    useEffect(() => {
+        if (isCompanyUser) {
+            Axios.get('/companyWorkingHours', {
+                params: {
+                    company_id: auth.user.id
+                }
+            })
+                .then((response) => {
+                    const worksDays = response.data.data.worksDays;
+                    const workTime = response.data.data.workingTime;
+                    console.log(response.data.data);
+
+                    setSelectedWorkdays({
+                        'monday': worksDays.monday,
+                        'tuesday': worksDays.tuesday,
+                        'wednesday': worksDays.wednesday,
+                        'thursday': worksDays.thursday,
+                        'friday': worksDays.friday,
+                        'saturday': worksDays.saturday,
+                        'sunday': worksDays.sunday
+                    });
+
+                    setTimeOfWork({
+                        startTime: workTime.start_time,
+                        endTime: workTime.end_time
+                    });
+
+
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+    }, [isCompanyUser, auth.user.id]);
 
     const handleCheckboxChange = (e) => {
         const day = e.target.value;
@@ -91,40 +122,54 @@ export default function Dashboard({auth, daysOfWeek}) {
                         <div className="p-6 text-gray-900">You're logged in!</div>
                     </div>
                 </div>
+
                 {isCompanyUser && (
-                    <div className="test max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <form onSubmit={handleSubmit}>
+                    <div className="test max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
+                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                            <div className="p-6 text-gray-900">
+                                <form onSubmit={handleSubmit}>
+                                    <label htmlFor="workHours">Your time of work:</label>
+                                    <div className="flex items-center justify-center">
+                                        <label htmlFor="startTime" className='mr-2'>From:</label>
+                                        <input type="time" className='mr-8' id="startTime" name="startTime"
+                                               value={timeOfWok.startTime}
+                                               onChange={(e) => setTimeOfWork({
+                                                   ...timeOfWok,
+                                                   startTime: e.target.value
+                                               })}/>
+                                        <label htmlFor="endTime" className='mr-2'>to:</label>
+                                        <input type="time" id="endTime" name="endTime" value={timeOfWok.endTime}
+                                               onChange={(e) => setTimeOfWork({
+                                                   ...timeOfWok,
+                                                   endTime: e.target.value
+                                               })}/>
+                                    </div>
+                                    <div className="flex items-center mt-4 space-x-2 justify-center">
+                                        {daysOfWeek.map((day) => (
+                                            <div key={day} className="mt-2 flex items-center space-x-1">
+                                                <label htmlFor={day} className="text-gray-700">{day}</label>
+                                                <input
+                                                    type="checkbox"
+                                                    id={day}
+                                                    name="workdays"
+                                                    value={day.toLowerCase()}
+                                                    checked={selectedWorkdays[day.toLowerCase()]}
+                                                    onChange={handleCheckboxChange}
+                                                    className=" form-checkbox text-blue-500 h-5 w-5 ml-2"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className='flex items-center justify-center'>
+                                        <PrimaryButton className="mt-4" disabled={processing}>
+                                            Choose
+                                        </PrimaryButton>
+                                    </div>
 
-
-                            <label htmlFor="workHours">Години роботи:</label>
-                            <div>
-                                <label htmlFor="startTime">З:</label>
-                                <input type="time" id="startTime" name="startTime" value={data.startTime}
-                                       onChange={(e) => setData('startTime', e.target.value)}/>
+                                </form>
                             </div>
-                            <div>
-                                <label htmlFor="endTime">До:</label>
-                                <input type="time" id="endTime" name="endTime" value={data.endTime}
-                                       onChange={(e) => setData('endTime', e.target.value)}/>
-                            </div>
-                            {daysOfWeek.map((day) => (
-                                <div key={day}>
-                                    <label htmlFor={day}>{day}</label>
-                                    <input
-                                        type="checkbox"
-                                        id={day}
-                                        name="workdays"
-                                        value={day.toLowerCase()}
-                                        checked={selectedWorkdays[day.toLowerCase()]}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                </div>
-                            ))}
+                        </div>
 
-                            <PrimaryButton className="mt-4" disabled={processing}>
-                                Choose
-                            </PrimaryButton>
-                        </form>
                     </div>
                 )}
             </div>
