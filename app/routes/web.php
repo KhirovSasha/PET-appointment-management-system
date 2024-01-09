@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/companyWorkingHours', [DasboardController::class, 'companyTime'])->name('companyTime');
 
+    Route::get('/companyWorkingTime/all', [CompanyWorkingTimeController::class, 'index']);
+
     Route::post('/dashboard/client/work-time', [CompanyWorkingTimeController::class, 'store'])->name('work-time')->middleware('verified');
 });
 

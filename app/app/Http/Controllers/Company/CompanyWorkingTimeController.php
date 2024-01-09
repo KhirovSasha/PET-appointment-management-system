@@ -9,6 +9,19 @@ use Illuminate\Http\Request;
 
 class CompanyWorkingTimeController extends Controller
 {
+    public function index()
+    {
+        $companyWorkingHours = CompanyWorkingHours::with('user')->get();
+
+        foreach ($companyWorkingHours as $companyTimeOfWork) {
+            $daysOfWeek = Constants::DAYS_OF_WEEK;
+
+            $companyTimeOfWork->workCompany = in_array(true, array_map(fn($day) => $companyTimeOfWork->$day, $daysOfWeek));
+        }
+
+        return response()->json(['data' => $companyWorkingHours]);
+    }
+
     function store(Request $request)
     {
         $data = $request->all();
@@ -27,4 +40,6 @@ class CompanyWorkingTimeController extends Controller
         $companyWorkingHours->fill($tableData);
         $companyWorkingHours->save();
     }
+
+
 }
