@@ -33,6 +33,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'email_verified_at',
+        'google_id',
+        'updated_at'
     ];
 
     /**
@@ -44,4 +48,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function companyWorkingHours()
+    {
+        return $this->hasMany(CompanyWorkingHours::class, 'company_id');
+    }
 }

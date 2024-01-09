@@ -27,4 +27,14 @@ class CompanyWorkingHours extends Model
         'end_time' => 'datetime',
         'working_days' => 'json',
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'company_id');
+    }
 }
